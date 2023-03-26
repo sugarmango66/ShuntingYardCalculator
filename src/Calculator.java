@@ -18,9 +18,11 @@ import container.Stack;
 
 public class Calculator {
     public static void main(String[] args) {
-        String ex = "(11+33)*444/(77-88)";
+        String ex = "(8-5)*4+8/2";
         Queue res = convert(ex);
         res.print();
+        System.out.println(evaluate(res));
+
     }
 
     //getPrecedence方法 判断运算优先级
@@ -90,4 +92,39 @@ public class Calculator {
         return queue;
     }
 
+    //evaluate方法 返回后缀表达式计算结果
+    public static double evaluate(Queue q) {
+        /*
+        1. 从队列头部取出标记。
+        2. 如果当前标记是一个数字，把它入栈。
+        3. 如果当前标记是一个操作符，从栈中弹出相应数量的元素(例如，‘*’代表乘法，需要两个操作数)，
+        根据操作符对弹出的数字进行操作，并将结果入栈。
+        重复以上三步操作直到队列为空
+         */
+        //新建栈
+        Stack stack = new Stack();
+        while (!q.isEmpty()) {
+            Object obj = q.dequeue();
+            if (obj instanceof Integer) {//数字
+                stack.push(obj);
+            } else {//操作符
+                //出栈2个操作数
+                Object opR = stack.pop();
+                Object opL = stack.pop();
+
+                double right = opR instanceof Integer ? (Integer) opR : (Double) opR;
+                double left = opL instanceof Integer ? (Integer) opL : (Double) opL;
+                double res = 0;
+                switch ((char) obj) {
+                    case '+' -> res = left + right;
+                    case '-' -> res = left - right;
+                    case '*' -> res = left * right;
+                    case '/' -> res = left / right;
+                    default -> System.out.println("运算符有误");
+                }
+                stack.push(res);
+            }
+        }
+        return (double) stack.pop();
+    }
 }
