@@ -1,10 +1,10 @@
 package container;
 
 public class Node {
-    public char elem;
+    public Object elem;
     public Node next;
 
-    public Node(char elem) {
+    public Node(Object elem) {
         this.elem = elem;
         this.next = null;
     }

@@ -18,7 +18,7 @@ public class Queue {
     public boolean isEmpty() {
         return first==null;
     }
-    public char peek() {
+    public Object peek() {
         try {
             if (isEmpty())
                 throw new NoSuchElementException("Queue为空");
@@ -28,7 +28,7 @@ public class Queue {
             return 'x';
         }
     }
-    public void enqueue(char data) {//队尾入
+    public void enqueue(Object data) {//队尾入
         Node node = new Node(data);
         if (isEmpty()) {
             first = node;
@@ -39,11 +39,11 @@ public class Queue {
             last = node;
         }
     }
-    public char dequeue() {//队首出
+    public Object dequeue() {//队首出
         try {
             if (isEmpty())
                 throw new NoSuchElementException("Queue为空");
-            char temp = first.elem;
+            Object temp = first.elem;
             first = first.next;
             return temp;
         } catch (NoSuchElementException e) {

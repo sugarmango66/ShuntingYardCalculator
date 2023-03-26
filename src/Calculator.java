@@ -18,7 +18,7 @@ import container.Stack;
 
 public class Calculator {
     public static void main(String[] args) {
-        String ex = "12+3*4";
+        String ex = "(11+33)*444/(77-88)";
         Queue res = convert(ex);
         res.print();
     }
@@ -49,29 +49,38 @@ public class Calculator {
     }
 
     //convert方法 返回后缀表达式in队
-    public static Queue convert(String expression) {
+    public static Queue convert(String e) {
         //新建容器
         Stack stack = new Stack();
         Queue queue = new Queue();
-        //逐个取出字符
+        //逐个取出字符(如果是连续数字则取出整串直到遇到非数字)
         //应用调度算法
-        for (char c : expression.toCharArray()) {
-            if (Character.isDigit(c)) {
-                queue.enqueue(c);
-            }
-            if (isOperator(c)) {
-                while (!stack.isEmpty() && isOperator(stack.peek()) && getPrecedence(stack.peek()) >= getPrecedence(c))
-                    queue.enqueue(stack.pop());
-                stack.push(c);
-            }
-            if (c == '(') {
-                stack.push(c);
-            }
-            if (c == ')') {
-                while (stack.peek() != '(') {
-                    queue.enqueue(stack.pop());
+        for (int i = 0; i < e.length(); i++) {
+            char c = e.charAt(i);
+            if (Character.isDigit(c)) {//当前位是数字 则连续判断字符 将操作数作为整体入队
+                int begin = i;
+                while (i < e.length() - 1 && e.charAt(i + 1) >= '0' && e.charAt(i + 1) <= '9') {
+                    i++;
                 }
-                stack.pop();//丢弃'('
+                String opStr = e.substring(begin, i + 1);
+                Integer op = Integer.parseInt(opStr);
+                queue.enqueue(op);//入队
+            } else {//当前位不是数字
+                if (isOperator(c)) {//运算符o1
+                    //只要 栈非空 且 栈顶是运算符 且 该运算符是更高优先级或同级左联型
+                    while (!stack.isEmpty() && isOperator((char) stack.peek()) && getPrecedence((char) stack.peek()) >= getPrecedence(c))
+                        queue.enqueue(stack.pop());//栈顶入队
+                    stack.push(c);//o1入栈
+                }
+                if (c == '(') {//左括号 入栈
+                    stack.push(c);
+                }
+                if (c == ')') {//右括号
+                    while ((char) stack.peek() != '(') {//依次出栈入队直到遇到左括号
+                        queue.enqueue(stack.pop());
+                    }
+                    stack.pop();//丢弃'('
+                }
             }
         }
 
@@ -80,4 +89,5 @@ public class Calculator {
         }
         return queue;
     }
+
 }

@@ -15,12 +15,12 @@ public class Stack {
     public Stack() {
     }
 
-    public char pop() {
+    public Object pop() {
         try {
             if (isEmpty()) {
                 throw new NoSuchElementException("Stack为空");
             }
-            char temp = top.elem;
+            Object temp = top.elem;
             top = top.next;
             return temp;
         } catch (NoSuchElementException e) {
@@ -29,13 +29,13 @@ public class Stack {
         }
     }
 
-    public void push(char data) {
+    public void push(Object data) {
         Node newNode = new Node(data);
         newNode.next = top;
         top = newNode;
     }
 
-    public char peek() {
+    public Object peek() {
         try {
             if (isEmpty()) {
                 throw new NoSuchElementException("Stack为空");
