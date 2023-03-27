@@ -5,7 +5,7 @@
 ○ getPrecedence方法，获取一个字符作为参数，如果字符为[+]或[-]，返回0;如
 果字符为[*]或[/]，返回1。这个方法让我们可以对比运算的优先级。
 ○ evaluate方法，获取一个代表后缀表达式的队列作为参数，返回表达式计算
-结果。
+结果。(暂时仅考虑整数 包括整除)
 ○ isNumeric方法，获取一个字符串作为参数，判断该字符串是否为数字。
 ○ main方法:
 ■ 获取输入:获取一个input.txt文件，文件内容是几行中缀表达式。
@@ -18,7 +18,7 @@ import container.Stack;
 
 public class Calculator {
     public static void main(String[] args) {
-        String ex = "(8-5)*4+8/2";
+        String ex = "(8-5)*4+8/3";
         Queue res = convert(ex);
         res.print();
         System.out.println(evaluate(res));
@@ -93,7 +93,7 @@ public class Calculator {
     }
 
     //evaluate方法 返回后缀表达式计算结果
-    public static double evaluate(Queue q) {
+    public static int evaluate(Queue q) {
         /*
         1. 从队列头部取出标记。
         2. 如果当前标记是一个数字，把它入栈。
@@ -109,12 +109,10 @@ public class Calculator {
                 stack.push(obj);
             } else {//操作符
                 //出栈2个操作数
-                Object opR = stack.pop();
-                Object opL = stack.pop();
+                Integer right = (Integer) stack.pop();
+                Integer left = (Integer) stack.pop();
 
-                double right = opR instanceof Integer ? (Integer) opR : (Double) opR;
-                double left = opL instanceof Integer ? (Integer) opL : (Double) opL;
-                double res = 0;
+                int res = 0;
                 switch ((char) obj) {
                     case '+' -> res = left + right;
                     case '-' -> res = left - right;
@@ -125,6 +123,6 @@ public class Calculator {
                 stack.push(res);
             }
         }
-        return (double) stack.pop();
+        return (Integer) stack.pop();
     }
 }
