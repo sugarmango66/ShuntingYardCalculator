@@ -55,13 +55,16 @@ public class Queue {
         }
     }
 
-    public void print() {
+    public String getAllElem() {
+        StringBuilder res = new StringBuilder();
         Node curr = first;
         while (curr != null) {
-            System.out.print(curr.elem + "\t");
+            res.append(curr.elem).append(" ");
             curr = curr.next;
         }
+        return res.toString();
     }
+
     //复制自身元素到新的队列
     public Queue copy() {
         Queue other = new Queue();
