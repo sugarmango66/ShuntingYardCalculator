@@ -16,13 +16,64 @@
 import container.Queue;
 import container.Stack;
 
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+
 public class Calculator {
     public static void main(String[] args) {
-        String ex = "(8-5)*4+8/3";
-        Queue res = convert(ex);
-        res.print();
-        System.out.println(evaluate(res));
-
+        //从文件获取输入内容
+        String fileName = "src/input.txt";
+        FileReader reader = null;
+        StringBuilder content = new StringBuilder();
+        try {
+            //创建FileReader对象
+            reader = new FileReader(fileName);
+            //循环读取 用字符数组方式
+            int readLen = 0;
+            char[] buf = new char[8];//每8个字符批量读取
+            while ((readLen = reader.read(buf)) != -1) {
+                //read(buf)返回实际读取到的字符数; 到文件结束 返回-1
+                content.append(new String(buf, 0, readLen));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (reader != null)
+                    reader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        String[] lines = content.toString().split("\n");
+        //输出到文件
+//        String outfileName = "/Users/suzanmagic/IdeaProjects/ShuntingYard/src/output.txt";//绝对路径
+        String outfileName = "src/output.txt";//相对路径（相对于proj根目录）
+        FileWriter fileWriter = null;
+        try {
+            //新建FileWriter对象
+            fileWriter = new FileWriter(outfileName);//覆盖模式 （追加模式跟参数true）
+            //循环 对每一行表达式
+            for (String line : lines) {
+                //转换 计算
+                Queue converted = convert(line);
+                int evaluated = evaluate(converted);
+                //写入
+                fileWriter.write(converted.getAllElem());
+                fileWriter.write(Integer.toString(evaluated));
+                fileWriter.write('\n');
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                fileWriter.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        System.out.println("运行完毕");
     }
 
     //getPrecedence方法 判断运算优先级
@@ -93,7 +144,7 @@ public class Calculator {
     }
 
     //evaluate方法 返回后缀表达式计算结果
-    public static int evaluate(Queue q) {
+    public static int evaluate(Queue origin) {
         /*
         1. 从队列头部取出标记。
         2. 如果当前标记是一个数字，把它入栈。
@@ -101,6 +152,9 @@ public class Calculator {
         根据操作符对弹出的数字进行操作，并将结果入栈。
         重复以上三步操作直到队列为空
          */
+        //复制队列-否则此方法运行完原队列将被清空
+        Queue q = origin.copy();
+
         //新建栈
         Stack stack = new Stack();
         while (!q.isEmpty()) {
