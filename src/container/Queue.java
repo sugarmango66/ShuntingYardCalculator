@@ -15,9 +15,11 @@ public class Queue {
 
     public Queue() {
     }
+
     public boolean isEmpty() {
-        return first==null;
+        return first == null;
     }
+
     public Object peek() {
         try {
             if (isEmpty())
@@ -28,17 +30,18 @@ public class Queue {
             return 'x';
         }
     }
+
     public void enqueue(Object data) {//队尾入
         Node node = new Node(data);
         if (isEmpty()) {
             first = node;
             last = node;
-        }
-        else {
+        } else {
             last.next = node;
             last = node;
         }
     }
+
     public Object dequeue() {//队首出
         try {
             if (isEmpty())
@@ -51,11 +54,22 @@ public class Queue {
             return 'x';
         }
     }
+
     public void print() {
         Node curr = first;
         while (curr != null) {
             System.out.print(curr.elem + "\t");
             curr = curr.next;
         }
+    }
+    //复制自身元素到新的队列
+    public Queue copy() {
+        Queue other = new Queue();
+        Node curr = first;
+        while (curr != null) {
+            other.enqueue(curr.elem);
+            curr = curr.next;
+        }
+        return other;
     }
 }
