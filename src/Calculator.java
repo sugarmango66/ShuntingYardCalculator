@@ -104,7 +104,7 @@ public class Calculator {
     //convert方法 返回后缀表达式in队
     public static Queue convert(String e) {
         //新建容器
-        Stack stack = new Stack();
+        Stack<Character> stack = new Stack<>();//约束栈内只放字符
         Queue queue = new Queue();
         //逐个取出字符(如果是连续数字则取出整串直到遇到非数字)
         //应用调度算法
@@ -121,7 +121,7 @@ public class Calculator {
             } else {//当前位不是数字
                 if (isOperator(c)) {//运算符o1
                     //只要 栈非空 且 栈顶是运算符 且 该运算符是更高优先级或同级左联型
-                    while (!stack.isEmpty() && isOperator((char) stack.peek()) && getPrecedence((char) stack.peek()) >= getPrecedence(c))
+                    while (!stack.isEmpty() && isOperator(stack.peek()) && getPrecedence(stack.peek()) >= getPrecedence(c))
                         queue.enqueue(stack.pop());//栈顶入队
                     stack.push(c);//o1入栈
                 }
@@ -129,7 +129,7 @@ public class Calculator {
                     stack.push(c);
                 }
                 if (c == ')') {//右括号
-                    while ((char) stack.peek() != '(') {//依次出栈入队直到遇到左括号
+                    while (stack.peek() != '(') {//依次出栈入队直到遇到左括号
                         queue.enqueue(stack.pop());
                     }
                     stack.pop();//丢弃'('
@@ -156,15 +156,16 @@ public class Calculator {
         Queue q = origin.copy();
 
         //新建栈
-        Stack stack = new Stack();
+        //约束栈内只放Integer 增加安全性 减少类型转换
+        Stack<Integer> stack = new Stack<>();
         while (!q.isEmpty()) {
             Object obj = q.dequeue();
             if (obj instanceof Integer) {//数字
-                stack.push(obj);
+                stack.push((Integer) obj);
             } else {//操作符
                 //出栈2个操作数
-                Integer right = (Integer) stack.pop();
-                Integer left = (Integer) stack.pop();
+                Integer right = stack.pop();
+                Integer left = stack.pop();
 
                 int res = 0;
                 switch ((char) obj) {
@@ -177,6 +178,6 @@ public class Calculator {
                 stack.push(res);
             }
         }
-        return (Integer) stack.pop();
+        return stack.pop();
     }
 }
