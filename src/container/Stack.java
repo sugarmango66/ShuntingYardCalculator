@@ -25,7 +25,7 @@ public class Stack<T> {
     }
 
     public void push(T data) {
-        Node newNode = new Node(data);
+        Node<T> newNode = new Node<>(data);
         newNode.next = top;
         top = newNode;
     }
@@ -42,7 +42,7 @@ public class Stack<T> {
     }
 
     public void print() {
-        Node curr = top;
+        Node<T> curr = top;
         while (curr != null) {
             System.out.print(curr.elem + "\t");
             curr = curr.next;
