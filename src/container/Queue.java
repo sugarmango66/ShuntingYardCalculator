@@ -10,8 +10,8 @@ import java.util.NoSuchElementException;
 ○ isEmpty方法，用来判断队列是否为空。
  */
 public class Queue {
-    private Node first;
-    private Node last;
+    private Node<Object> first;
+    private Node<Object> last;
 
     public Queue() {
     }
@@ -32,7 +32,7 @@ public class Queue {
     }
 
     public void enqueue(Object data) {//队尾入
-        Node node = new Node(data);
+        Node<Object> node = new Node<>(data);
         if (isEmpty()) {
             first = node;
             last = node;
@@ -57,7 +57,7 @@ public class Queue {
 
     public String getAllElem() {
         StringBuilder res = new StringBuilder();
-        Node curr = first;
+        Node<Object> curr = first;
         while (curr != null) {
             res.append(curr.elem).append(" ");
             curr = curr.next;
@@ -68,7 +68,7 @@ public class Queue {
     //复制自身元素到新的队列
     public Queue copy() {
         Queue other = new Queue();
-        Node curr = first;
+        Node<Object> curr = first;
         while (curr != null) {
             other.enqueue(curr.elem);
             curr = curr.next;
