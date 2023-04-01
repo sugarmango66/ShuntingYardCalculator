@@ -24,6 +24,17 @@ public class Calculator {
     public static void main(String[] args) {
         //从文件获取输入内容
         String fileName = "src/input.txt";
+        String content = readFile(fileName);
+        String[] expressions = content.split("\n");
+        //输出到文件
+//        String outfileName = "/Users/suzanmagic/IdeaProjects/ShuntingYard/src/output.txt";//绝对路径
+        String outfileName = "src/output.txt";//相对路径（相对于proj根目录）
+        process(expressions, outfileName);
+        System.out.println("运行完毕");
+    }
+
+    //读取文件 返回内容字符串
+    public static String readFile(String fileName) {
         FileReader reader = null;
         StringBuilder content = new StringBuilder();
         try {
@@ -46,10 +57,11 @@ public class Calculator {
                 e.printStackTrace();
             }
         }
-        String[] lines = content.toString().split("\n");
-        //输出到文件
-//        String outfileName = "/Users/suzanmagic/IdeaProjects/ShuntingYard/src/output.txt";//绝对路径
-        String outfileName = "src/output.txt";//相对路径（相对于proj根目录）
+        return content.toString();
+    }
+
+    //处理并写入文件 接收表达式字符串数组 文件名
+    public static void process(String[] lines, String outfileName) {
         FileWriter fileWriter = null;
         try {
             //新建FileWriter对象
@@ -68,12 +80,12 @@ public class Calculator {
             e.printStackTrace();
         } finally {
             try {
+                assert fileWriter != null;
                 fileWriter.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        System.out.println("运行完毕");
     }
 
     //getPrecedence方法 判断运算优先级
@@ -86,15 +98,15 @@ public class Calculator {
         return -1;
     }
 
-    //isNumeric方法 判断字符串是否为数字
-    public static boolean isNumeric(String str) {
-        //逐位判断ascii范围
-        for (char c : str.toCharArray()) {
-            if (!(c >= '0' && c <= '9'))
-                return false;
-        }
-        return true;
-    }
+    //isNumeric方法 判断字符串是否为数字-未使用
+//    public static boolean isNumeric(String str) {
+//        //逐位判断ascii范围
+//        for (char c : str.toCharArray()) {
+//            if (!(c >= '0' && c <= '9'))
+//                return false;
+//        }
+//        return true;
+//    }
 
     //isOperator方法
     public static boolean isOperator(char c) {
